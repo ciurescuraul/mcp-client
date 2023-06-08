@@ -31,15 +31,15 @@ public class ClientProcessJsonService {
     public List<Message> parseJsonFromUrlByDate(String date) {
         log.debug("ClientProcessJsonService.parseJsonFromUrlByDate({})", date);
 
-        URL url = null;
-        String line = null;
+        URL url;
+        String line;
         try {
             url = new URL(linkUrl + date + fileExtension);
         } catch (MalformedURLException e) {
             throw new RuntimeException(e.getMessage());
         }
 
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()))) {
             while ((line = br.readLine()) != null) {
                 if (isValidJSON(line)) {
                     Message message = mapper.reader().readValue(line, Message.class);
