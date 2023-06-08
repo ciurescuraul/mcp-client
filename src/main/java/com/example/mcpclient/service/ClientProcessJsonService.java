@@ -22,19 +22,19 @@ public class ClientProcessJsonService {
     @Value("${mcp.url}")
     private String linkUrl;
 
-    @Value("${mcp.file.extension}")
+    @Value("${mcp.file}")
     private String fileExtension;
 
     private final List<Message> messages = new ArrayList<>();
     private static final ObjectMapper mapper = new ObjectMapper();
 
-    public List<Message> parseJsonFromUrlByDate(String date) {
-        log.debug("ClientProcessJsonService.parseJsonFromUrlByDate({})", date);
+    public List<Message> parseJsonFromUrlByDate(String localDate) {
+        log.debug("ClientProcessJsonService.parseJsonFromUrlByDate({})", localDate);
 
         URL url;
         String line;
         try {
-            url = new URL(linkUrl + date + fileExtension);
+            url = new URL(linkUrl + localDate + fileExtension);
         } catch (MalformedURLException e) {
             throw new RuntimeException(e.getMessage());
         }
