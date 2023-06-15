@@ -26,10 +26,8 @@ public class MCPController {
         log.debug("MCPController.processJsonFile()");
 
         List<Message> messages = processJsonService.parseJsonFromUrlByDate(localDate);
-        log.debug("messages: {}", messages);
+//        log.debug("messages: {}", messages);
 
         return messages.stream().toList();
     }
-
-
 }
