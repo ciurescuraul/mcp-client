@@ -14,7 +14,7 @@ public record Message(
         @JsonProperty("destination")
         Long destination,
         @JsonProperty("duration")
-        int duration,
+        Long duration,
         @JsonProperty("status_code")
         String statusCode,
         @JsonProperty("status_description")
