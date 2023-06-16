@@ -1,12 +1,12 @@
 package com.example.mcpclient.model;
 
 public record Kpis(
-        int numberOfProcessedJsonFiles,
-        int totalNumberOfRows,
-        int totalNumberOfCalls,
-        int totalNumberOfMessages,
-        int totalNumberOfDiffOriginCountryCodes,
-        int totalNumberOfDiffDestinationCountryCodes,
-        int durationOfEachJsonProcess
+        long numberOfProcessedJsonFiles,
+        long totalNumberOfRows,
+        long totalNumberOfCalls,
+        long totalNumberOfMessages,
+        long totalNumberOfDiffOriginCountryCodes,
+        long totalNumberOfDiffDestinationCountryCodes,
+        long durationOfEachJsonProcess
 ) {
 }
