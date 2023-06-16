@@ -27,32 +27,33 @@ public class ClientProcessJsonService {
 
     @Value("${mcp.file}")
     private String fileExtension;
-    public List<Message> messages = Collections.emptyList();
+    protected static List<Message> messages = Collections.emptyList();
     private static final JsonMapper mapper = new JsonMapper();
 
     public List<Message> parseJsonFromUrlByDate(String localDate) {
         log.debug("ClientProcessJsonService.parseJsonFromUrlByDate({})", localDate);
         mapper.configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL, true);
-        mapper.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS);
+//        mapper.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS);
 
-        URL url;
+        URL url = null;
         String line;
         try {
             url = new URL(linkUrl + localDate + fileExtension);
         } catch (MalformedURLException e) {
-            throw new RuntimeException(e.getMessage());
+            log.debug("Error: invalid URL ->  {}", e.getMessage());
         }
-
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()))) {
-            messages = new ArrayList<>();
-            while ((line = br.readLine()) != null) {
-                if (isValidJSON(line)) {
-                    Message message = mapper.reader().readValue(line, Message.class);
-                    messages.add(message);
+        if (url != null) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()))) {
+                messages = new ArrayList<>();
+                while ((line = br.readLine()) != null) {
+                    if (isValidJSON(line)) {
+                        Message message = mapper.reader().readValue(line, Message.class);
+                        messages.add(message);
+                    }
                 }
+            } catch (IOException e) {
+                log.debug("Error: cannot process, invalid URL ->  {}", e.getMessage());
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
         }
         return messages;
     }
