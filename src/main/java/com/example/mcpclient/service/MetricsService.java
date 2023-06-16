@@ -10,18 +10,6 @@ import java.util.List;
 @Service
 @Slf4j
 public class MetricsService {
-//    Number of rows with fields errors
-//    Number of calls origin/destination grouped by country code (https://en.wikipedia.org/wiki/MSISDN)
-//    Relationship between OK/KO calls
-//    Average call duration grouped by country code (https://en.wikipedia.org/wiki/MSISDN)
-//    Word occurrence ranking for the given words in message_content field.
-
-    private final ClientProcessJsonService jsonClient;
-
-    public MetricsService(ClientProcessJsonService jsonClient) {
-        this.jsonClient = jsonClient;
-    }
-
     private long numRowsMissingFields;
     private long numOfMessagesWithBlankContent;
     private long numberOfRowsWithFieldsErrors;
@@ -31,7 +19,8 @@ public class MetricsService {
     private long wordOcurrenceRankingInMessageContentField;
 
     public Metrics getCounters() {
-        List<Message> messages = jsonClient.messages;
+        log.debug("MetricsService.getCounters()");
+        List<Message> messages = ClientJsonService.messages;
         if (!messages.isEmpty()) {
             //    Number of rows with missing fields
             numRowsMissingFields = messages.stream().filter(m -> m.messageType() == null || m.messageType().isBlank()).count() +
@@ -43,13 +32,28 @@ public class MetricsService {
                     messages.stream().filter(m -> m.statusDescription() == null || m.statusDescription().isBlank()).count() +
                     messages.stream().filter(m -> m.messageContent() == null || m.messageContent().isBlank()).count() +
                     messages.stream().filter(m -> m.messageStatus() == null || m.messageStatus().isBlank()).count();
-            log.info("missingMessageStatus: {}", numRowsMissingFields);
+            log.debug("numRowsMissingFields: {}", numRowsMissingFields);
 
             //    Number of messages with blank content
             numOfMessagesWithBlankContent = messages.stream().filter(m -> m.messageContent() == null || m.messageContent().isBlank()).count();
-            log.info("numOfMessagesWithBlankContent: {}", numOfMessagesWithBlankContent);
-        }
+            log.debug("numOfMessagesWithBlankContent: {}", numOfMessagesWithBlankContent);
 
+            //    Number of rows with fields errors
+            numberOfRowsWithFieldsErrors = ClientJsonService.invalidFields.size();
+            log.debug("numberOfRowsWithFieldsErrors: {}", numberOfRowsWithFieldsErrors);
+
+            //    Number of calls origin/destination grouped by country code (https://en.wikipedia.org/wiki/MSISDN)
+            numberOfCallsByCountryCode = 0L;
+
+            //    Relationship between OK/KO calls
+            relationBetweenOkKoCalls = 0L;
+
+            //    Average call duration grouped by country code (https://en.wikipedia.org/wiki/MSISDN)
+            averageCallDurationGroupedByCountryCode = 0L;
+
+            //    Word occurrence ranking for the given words in message_content field.
+            wordOcurrenceRankingInMessageContentField = 0L;
+        }
 
         return new Metrics(
                 numRowsMissingFields,
