@@ -1,7 +1,7 @@
 package com.example.mcpclient.controller;
 
 import com.example.mcpclient.model.Message;
-import com.example.mcpclient.service.ClientProcessJsonService;
+import com.example.mcpclient.service.ClientJsonService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,9 +14,9 @@ import java.util.List;
 @RestController
 @Slf4j
 public class MCPController {
-    private final ClientProcessJsonService processJsonService;
+    private final ClientJsonService processJsonService;
 
-    public MCPController(ClientProcessJsonService processJsonService) {
+    public MCPController(ClientJsonService processJsonService) {
         this.processJsonService = processJsonService;
     }
 
