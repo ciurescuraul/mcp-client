@@ -10,8 +10,6 @@ import java.util.List;
 @Service
 @Slf4j
 public class MetricsService {
-
-
 //    Number of rows with fields errors
 //    Number of calls origin/destination grouped by country code (https://en.wikipedia.org/wiki/MSISDN)
 //    Relationship between OK/KO calls
@@ -45,12 +43,13 @@ public class MetricsService {
                     messages.stream().filter(m -> m.statusDescription() == null || m.statusDescription().isBlank()).count() +
                     messages.stream().filter(m -> m.messageContent() == null || m.messageContent().isBlank()).count() +
                     messages.stream().filter(m -> m.messageStatus() == null || m.messageStatus().isBlank()).count();
+            log.info("missingMessageStatus: {}", numRowsMissingFields);
 
             //    Number of messages with blank content
-            numOfMessagesWithBlankContent = 0L;
+            numOfMessagesWithBlankContent = messages.stream().filter(m -> m.messageContent() == null || m.messageContent().isBlank()).count();
+            log.info("numOfMessagesWithBlankContent: {}", numOfMessagesWithBlankContent);
         }
 
-        log.info("missingMessageStatus: {}", numRowsMissingFields);
 
         return new Metrics(
                 numRowsMissingFields,
