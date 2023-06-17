@@ -10,11 +10,11 @@ public record Message(
         @JsonProperty("timestamp")
         Long timestamp,
         @JsonProperty("origin")
-        Long origin,
+        String origin,
         @JsonProperty("destination")
         Long destination,
         @JsonProperty("duration")
-        Long duration,
+        String duration,
         @JsonProperty("status_code")
         String statusCode,
         @JsonProperty("status_description")

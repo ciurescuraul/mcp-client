@@ -69,9 +69,14 @@ public class ClientJsonService {
                     if (isValidJSON(line)) {
                         jsonNode = mapper.readTree(line);
                         Message message = mapper.treeToValue(jsonNode, Message.class);
-                        log.debug("message: {}", message);
+//                        log.debug("message: {}", message);
 
-                        if (!jsonNode.isEmpty() && !jsonNode.isNull() && jsonNode.get("message_type") != null) {
+                        if (!jsonNode.isEmpty()
+                                && !jsonNode.isNull()
+                                && !message.messageType().contains("NULL")
+                                && !message.messageType().isEmpty()
+                                && !message.origin().isEmpty()
+                        ) {
                             messages.add(message);
                             bw.write(jsonNode + "\n");
                         } else if (jsonNode.get("message_type") == null) {

@@ -2,10 +2,15 @@ package com.example.mcpclient.service;
 
 import com.example.mcpclient.model.Message;
 import com.example.mcpclient.model.Metrics;
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -13,7 +18,7 @@ public class MetricsService {
     private long numRowsMissingFields;
     private long numOfMessagesWithBlankContent;
     private long numberOfRowsWithFieldsErrors;
-    private long numberOfCallsByCountryCode;
+    private Map<Long, Long> numberOfCallsByCountryCode;
     private long relationBetweenOkKoCalls;
     private long averageCallDurationGroupedByCountryCode;
     private long wordOcurrenceRankingInMessageContentField;
@@ -43,7 +48,30 @@ public class MetricsService {
             log.debug("numberOfRowsWithFieldsErrors: {}", numberOfRowsWithFieldsErrors);
 
             //    Number of calls origin/destination grouped by country code (https://en.wikipedia.org/wiki/MSISDN)
-            numberOfCallsByCountryCode = 0L;
+            numberOfCallsByCountryCode = new HashMap<>();
+            long numberOfCalls = 0L;
+            long countryCode;
+
+            for (Message message : messages) {
+                try {
+                    String numberToParse;
+                    if (!message.origin().isBlank() && message.duration() != null) {
+                        numberToParse = "+" + message.origin();
+                        Phonenumber.PhoneNumber msisdn = PhoneNumberUtil.getInstance().parse(numberToParse.strip(), "");
+                        countryCode = msisdn.getCountryCode();
+
+                        if (numberOfCallsByCountryCode.containsKey(countryCode)) {
+                            numberOfCalls = numberOfCallsByCountryCode.get(countryCode);
+                            numberOfCalls++;
+                        }
+                        numberOfCallsByCountryCode.put(countryCode, numberOfCalls);
+                    }
+                    numberOfCalls = 0L;
+                } catch (NumberParseException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+//            log.debug("number of calls: {}", numberOfCallsByCountryCode);
 
             //    Relationship between OK/KO calls
             relationBetweenOkKoCalls = 0L;
