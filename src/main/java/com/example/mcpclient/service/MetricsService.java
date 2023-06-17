@@ -68,7 +68,7 @@ public class MetricsService {
                     }
                     numberOfCalls = 0L;
                 } catch (NumberParseException e) {
-                    throw new RuntimeException(e);
+                    log.debug("NumberParseException: {}", e.getMessage());
                 }
             }
 //            log.debug("number of calls: {}", numberOfCallsByCountryCode);
