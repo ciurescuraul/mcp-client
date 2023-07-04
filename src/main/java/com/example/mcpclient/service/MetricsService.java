@@ -25,7 +25,7 @@ public class MetricsService {
 
     public Metrics getCounters() {
         log.debug("MetricsService.getCounters()");
-        List<Message> messages = ClientJsonService.messages;
+        List<Message> messages = ClientJsonServiceDeprecated.messages;
         if (!messages.isEmpty()) {
             //    Number of rows with missing fields
             numRowsMissingFields = messages.stream().filter(m -> m.messageType() == null || m.messageType().isBlank()).count() +
@@ -44,7 +44,7 @@ public class MetricsService {
             log.debug("numOfMessagesWithBlankContent: {}", numOfMessagesWithBlankContent);
 
             //    Number of rows with fields errors
-            numberOfRowsWithFieldsErrors = ClientJsonService.invalidFields.size();
+            numberOfRowsWithFieldsErrors = ClientJsonServiceDeprecated.invalidFields.size();
             log.debug("numberOfRowsWithFieldsErrors: {}", numberOfRowsWithFieldsErrors);
 
             //    Number of calls origin/destination grouped by country code (https://en.wikipedia.org/wiki/MSISDN)
