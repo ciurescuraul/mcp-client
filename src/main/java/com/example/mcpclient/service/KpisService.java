@@ -27,7 +27,7 @@ public class KpisService {
 
     public Kpis getCounters() {
         log.debug("KpisService.getCounters()");
-        List<Message> messages = ClientJsonService.messages;
+        List<Message> messages = ClientJsonServiceDeprecated.messages;
 
 
         return new Kpis(
